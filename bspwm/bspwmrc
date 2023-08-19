@@ -1,0 +1,75 @@
+#! /bin/sh
+
+#
+#                 ░█▀▄░█▀▀░█▀█░█░█░█▄█
+#                 ░█▀▄░▀▀█░█▀▀░█▄█░█░█
+#                 ░▀▀░░▀▀▀░▀░░░▀░▀░▀░▀
+#
+
+$HOME/.scripts/custom-autostart
+
+# Network manager
+#nm-applet &
+
+setxkbmap -layout us,cz -option caps:escape &
+xbindkeys &
+xsetroot -cursor_name left_ptr &
+sxhkd &
+picom &
+brillo -I &
+nitrogen --restore &
+wmname LG3D &
+lxpolkit &
+xset -dpms s off & # disable screen blanking
+dunst &
+redshift &
+discord &
+megasync &
+sleep 0.3 &
+#dropbox &
+#nautilus --gapplication-service &
+
+# Swallow
+
+#nohup pidof $HOME/.scripts/bspswallow || $HOME/.scripts/bspswallow &
+# pgrep bspswallow || nohup ~/.scripts/bspswallow &
+
+# clean /tmp
+
+
+# Workspaces
+
+bspc config window_gap          20
+bspc config split_ratio          0.5
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+bspc config single_monocle       true
+$HOME/.config/bspwm/autostart
+
+# Default state/workspace for applications
+bspc desktop '^2' -l monocle
+bspc rule -a firefox desktop='^2'
+bspc rule -a discord desktop='^9' follow=off focus=off
+bspc rule -a MEGAsync desktop='^8' follow=off focus=off
+bspc rule -a Spotify desktop='^10'
+bspc rule -a Zathura state=tiled
+bspc config pointer_modifier mod4
+bspc config ignore_ewmh_focus true
+
+# desktop 3 no gaps and border
+bspc config -d '^3' window_gap 0
+bspc config -d '^3' border_width 0
+
+#sleep 0.69
+
+# Autostart applications:
+
+# Start Polybar
+$HOME/.config/polybar/scripts/launch-polybar.sh &
+
+# Start two terminals on desktop 1
+bspc rule -a \* -o && sleep 0.015 ; kitty -e $SHELL -c "$HOME/.config/neofetch/launch-neofetch.sh && $SHELL" &
+bspc rule -a && sleep 0.015 ; kitty &
+
+# Start firefox on desktop 2
+bspc rule -a \* -o && sleep 0.015 ; firefox &
